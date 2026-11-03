@@ -44,7 +44,8 @@
     align-items:center;margin-bottom:20px;opacity:.8}
   .topbar .logo{font-size:14px;letter-spacing:.2em;color:var(--gold2)}
   .topbar nav{display:flex;gap:16px;font-size:13px;opacity:.8}
-  .topbar nav button{opacity:.7}
+  .topbar nav button{opacity:.7;transition:opacity .2s}
+  .topbar nav button:hover{opacity:1}
   .topbar nav button.active{opacity:1;color:var(--gold2)}
 
   h2{font-size:22px;font-weight:400;letter-spacing:.2em;text-align:center;margin-bottom:24px}
@@ -102,10 +103,14 @@
 
   /* ===== 结果页 ===== */
   #s-result{justify-content:center;gap:20px;text-align:center}
-  .verse{font-size:14px;opacity:.8;max-width:300px;letter-spacing:.1em;line-height:1.9}
+  .verse{font-size:14px;opacity:.8;max-width:300px;letter-spacing:.1em;line-height:1.9;
+    padding:16px 20px;border-left:2px solid var(--gold);text-align:left}
   .actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:260px;margin-top:8px}
-  .actions button{padding:12px;border:1px solid var(--line);font-size:14px;letter-spacing:.2em}
+  .actions button{padding:12px;border:1px solid var(--line);font-size:14px;letter-spacing:.2em;
+    transition:all .3s;background:transparent}
+  .actions button:hover{border-color:var(--gold);background:rgba(201,162,39,.08)}
   .actions button.primary{border-color:var(--gold);color:var(--gold2);background:rgba(201,162,39,.1)}
+  .actions button.primary:hover{background:rgba(201,162,39,.2)}
 
   /* ===== 卡册 ===== */
   .album{width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
