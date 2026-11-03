@@ -255,6 +255,7 @@
   <div class="topbar"><div class="logo">卡册</div><nav>
     <button onclick="go('s-draw')">抽签</button></nav></div>
   <h2>缘分册</h2>
+  <div style="font-size:12px;opacity:.5;margin-bottom:16px;letter-spacing:.1em">已收藏 <span id="album-count">0</span> 张</div>
   <div class="album" id="album"></div>
 </section>
 
@@ -576,6 +577,8 @@ function render(){
   if(ab){
     ab.innerHTML="";
     const all=Object.values(S.album||{});
+    const countEl=document.getElementById("album-count");
+    if(countEl) countEl.textContent=all.length;
     if(all.length===0){
       ab.innerHTML='<div style="grid-column:1/-1;text-align:center;opacity:.5;padding:40px 0;font-size:13px;letter-spacing:.1em">还没有收藏<br><br>去抽一支吧</div>';
     } else {
