@@ -83,7 +83,8 @@
   .card-inner{position:relative;width:100%;height:100%;transition:transform 1s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
   .card-flip.flipped .card-inner{transform:rotateY(180deg)}
   .card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:4px;overflow:hidden}
-  .card-front{background:linear-gradient(135deg,var(--ink2),#1a1f35);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .card-front{background:linear-gradient(135deg,var(--ink2),#1a1f35);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:0 8px 32px rgba(0,0,0,.3)}
   .card-front::before{content:"缘";font-size:64px;letter-spacing:.2em;color:var(--gold2);opacity:.2;font-family:serif}
   .card-front::after{content:"HALF · DESTINY";font-size:9px;letter-spacing:.3em;color:var(--gold2);opacity:.4;margin-top:20px}
   .card-back{background:var(--ink2);transform:rotateY(180deg)}
