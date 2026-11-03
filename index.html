@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>一半 · 缘</title>
+<style>
+  :root{
+    --ink:#0B0E1A; --ink2:#141828; --gold:#C9A227; --gold2:#E8D5A3;
+    --paper:#F2EADA; --red:#8B2C2C; --line:rgba(232,213,163,.25);
+    --n:#8a8a8a; --r:#5b8dd9; --sr:#c9a227; --ssr:#d94040;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;background:var(--ink);color:var(--paper);
+    font-family:"Songti SC","STSong","SimSun",serif;overflow:hidden}
+  body{font-size:16px;line-height:1.6}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  /* ===== 背景层 ===== */
+  .bg{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;
+    opacity:.5;filter:saturate(.9);animation:bgDrift 30s ease-in-out infinite alternate}
+  @keyframes bgDrift{from{transform:scale(1.05) translate(0,0)}to{transform:scale(1.1) translate(-1%,-1%)}}
+  /* taste-skill-ignore: gradient (photo scrim over background) */
+  .bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,14,26,.3) 0%,rgba(11,14,26,.85) 70%,var(--ink) 100%)}
+
+  /* ===== 屏幕容器 ===== */
+  .screen{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;
+    align-items:center;padding:24px;overflow-y:auto}
+  .screen.active{display:flex}
+
+  /* ===== 首屏 ===== */
+  #s-home{justify-content:center;text-align:center}
+  #s-home h1{font-size:48px;letter-spacing:.4em;font-weight:400;margin-bottom:12px}
+  #s-home h1 span{color:var(--gold2)}
+  #s-home .sub{font-size:14px;opacity:.7;letter-spacing:.3em;margin-bottom:80px}
+  .btn-main{padding:16px 56px;border:1px solid var(--gold);color:var(--gold2);
+    font-size:16px;letter-spacing:.4em;background:rgba(201,162,39,.08);transition:.3s}
+  .btn-main:hover{background:rgba(201,162,39,.2);transform:translateY(-2px)}
+  .btn-main:active{background:rgba(201,162,39,.25);transform:translateY(0)}
+
+  /* ===== 通用 ===== */
+  .topbar{width:100%;max-width:420px;display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:20px;opacity:.8}
+  .topbar .logo{font-size:14px;letter-spacing:.2em;color:var(--gold2)}
+  .topbar nav{display:flex;gap:16px;font-size:13px;opacity:.8}
+  .topbar nav button{opacity:.7}
+  .topbar nav button.active{opacity:1;color:var(--gold2)}
+
+  h2{font-size:22px;font-weight:400;letter-spacing:.2em;text-align:center;margin-bottom:24px}
+  .group-label{font-size:13px;opacity:.6;margin:16px 0 8px;letter-spacing:.15em}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .chip{padding:8px 18px;border:1px solid var(--line);font-size:14px;letter-spacing:.1em;
+    background:rgba(255,255,255,.03);transition:.2s}
+  .chip:hover{border-color:var(--gold2);transform:translateY(-1px)}
+  .chip.on{border-color:var(--gold);color:var(--gold2);background:rgba(201,162,39,.12)}
+
+  /* ===== 抽卡页 ===== */
+  .draw-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+  .lottery{width:160px;height:220px;border:1px solid var(--gold);background:var(--ink2);
+    display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:.3em;
+    color:var(--gold2);transition:.4s;cursor:pointer;position:relative;overflow:hidden;
+    background-image:url('assets/cardback-ssr.jpg');background-size:cover;background-position:center}
+  .lottery::before{content:"抽一支";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(11,14,26,.7);font-size:14px;letter-spacing:.3em}
+  .lottery:active{transform:scale(.96)}
+  .lottery.shaking{animation:shake .5s ease}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+  /* 卡牌翻转 */
+  .card-flip{perspective:1200px;width:260px;height:360px}
+  .card-inner{position:relative;width:100%;height:100%;transition:transform 1s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+  .card-flip.flipped .card-inner{transform:rotateY(180deg)}
+  .card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:4px;overflow:hidden}
+  .card-front{background:linear-gradient(135deg,var(--ink2),#1a1f35);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .card-front::before{content:"缘";font-size:64px;letter-spacing:.2em;color:var(--gold2);opacity:.2;font-family:serif}
+  .card-front::after{content:"HALF · DESTINY";font-size:9px;letter-spacing:.3em;color:var(--gold2);opacity:.4;margin-top:20px}
+  .card-back{background:var(--ink2);transform:rotateY(180deg)}
+
+  /* 卡牌 */
+  .card{width:260px;height:360px;border:2px solid var(--line);background:var(--ink2);
+    position:relative;overflow:hidden;transition:transform .5s}
+  .card .photo{width:100%;height:75%;object-fit:cover}
+  .card .info{padding:10px 12px}
+  .card .name{font-size:16px;letter-spacing:.1em}
+  .card .rarity{font-size:11px;letter-spacing:.2em;margin-top:4px}
+  .rarity.n{color:var(--n)} .rarity.r{color:var(--r)}
+  .rarity.sr{color:var(--sr)} .rarity.ssr{color:var(--ssr)}
+  /* taste-skill-ignore: shadow (game rarity visual) */
+  .frame-N{border-color:rgba(138,138,138,.4)}
+  .frame-R{border-color:rgba(91,141,217,.6)}
+  .frame-SR{border-color:var(--sr);box-shadow:0 0 20px rgba(201,162,39,.2)}
+  .frame-SSR{border-color:var(--ssr);box-shadow:0 0 30px rgba(217,64,64,.3)}
+
+  /* ===== 结果页 ===== */
+  #s-result{justify-content:center;gap:20px;text-align:center}
+  .verse{font-size:14px;opacity:.8;max-width:300px;letter-spacing:.1em;line-height:1.9}
+  .actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:260px;margin-top:8px}
+  .actions button{padding:12px;border:1px solid var(--line);font-size:14px;letter-spacing:.2em}
+  .actions button.primary{border-color:var(--gold);color:var(--gold2);background:rgba(201,162,39,.1)}
+
+  /* ===== 卡册 ===== */
+  .album{width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .album .item{aspect-ratio:3/4;border:1px solid var(--line);background:var(--ink2);
+    display:flex;align-items:center;justify-content:center;font-size:12px;opacity:.6}
+  .album .item.owned{opacity:1;border-color:var(--gold)}
+  .album .item img{width:100%;height:100%;object-fit:cover}
+
+  /* ===== 小家 ===== */
+  .home-card{width:200px;height:280px;border:2px solid var(--gold);background:var(--ink2);overflow:hidden;margin-bottom:16px}
+  .home-card img{width:100%;height:75%;object-fit:cover}
+  .home-card .nm{padding:8px;text-align:center;font-size:14px;letter-spacing:.1em}
+  .bond{width:100%;max-width:300px;margin:12px 0}
+  .bond .bar{height:6px;background:rgba(255,255,255,.1);margin-top:4px;position:relative}
+  .bond .bar i{position:absolute;left:0;top:0;height:100%;background:var(--gold);transition:width .6s}
+  .stage-label{font-size:13px;opacity:.7;letter-spacing:.15em}
+  .act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:360px;margin:16px 0}
+  .act-grid button{padding:12px 6px;border:1px solid var(--line);font-size:12px;letter-spacing:.08em;line-height:1.5}
+  .act-grid button:disabled{opacity:.3}
+  .dialog{max-width:360px;font-size:14px;opacity:.85;line-height:1.9;min-height:60px;text-align:center}
+  .acts-left{font-size:12px;opacity:.5;margin-top:8px}
+
+  /* 每日签 */
+  .daily{font-size:15px;max-width:280px;text-align:center;line-height:2;letter-spacing:.1em}
+  .daily .lucky{font-size:12px;color:var(--gold2);margin-top:12px}
+
+  /* 页脚 */
+  .footer{position:fixed;bottom:8px;left:0;right:0;text-align:center;
+    font-size:10px;opacity:.35;letter-spacing:.1em;z-index:2}
+
+  /* 动画 */
+  .fade-in{animation:fadeIn .6s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  .flip{animation:flipIn .8s ease}
+  @keyframes flipIn{0%{transform:rotateY(90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}
+
+  /* 首屏入场动画 */
+  #s-home.active h1{animation:fadeIn .8s ease .2s both}
+  #s-home.active .sub{animation:fadeIn .8s ease .4s both}
+  #s-home.active .btn-main{animation:fadeIn .8s ease .6s both}
+
+  /* 屏幕切换动画 */
+  .screen.active h2{animation:fadeIn .5s ease both}
+  .screen.active .group-label{animation:fadeIn .5s ease .1s both}
+  .screen.active .chips{animation:fadeIn .5s ease .2s both}
+  .screen.active .btn-main{animation:pop .5s ease .3s both}
+
+  @media (max-width:380px){
+    #s-home h1{font-size:36px}
+    .card{width:220px;height:310px}
+  }
+</style>
+</head>
+<body>
+<div class="bg" id="bg"></div>
+
+<!-- ===== 首屏 ===== -->
+<section class="screen active" id="s-home">
+  <h1>一半<span>·</span>缘</h1>
+  <div class="sub">好的关系，各撑一半</div>
+  <button class="btn-main" onclick="go('s-setup')">开始</button>
+  <div style="margin-top:24px"><button onclick="openDaily()" style="font-size:12px;opacity:.6;letter-spacing:.2em">今日一签</button></div>
+</section>
+
+<!-- ===== 建档 ===== -->
+<section class="screen" id="s-setup">
+  <div class="topbar"><div class="logo">一半 · 缘</div><nav>
+    <button onclick="go('s-home')">返回</button></nav></div>
+  <h2>你是谁</h2>
+  <div class="group-label">性别</div>
+  <div class="chips" id="c-sex"></div>
+  <div class="group-label">年龄段</div>
+  <div class="chips" id="c-age"></div>
+  <div class="group-label">气质偏好</div>
+  <div class="chips" id="c-style"></div>
+  <div style="margin-top:32px"></div>
+  <button class="btn-main" onclick="setup()">签下名字</button>
+</section>
+
+<!-- ===== 抽卡 ===== -->
+<section class="screen" id="s-draw">
+  <div class="topbar"><div class="logo">一半 · 缘</div><nav>
+    <button onclick="go('s-album')">卡册</button>
+    <button onclick="go('s-home2')">小家</button></nav></div>
+  <div class="draw-stage">
+    <div class="stage-label" id="draw-counts">今日余 3 签</div>
+    <div class="lottery" id="lottery" onclick="draw()">抽一支</div>
+    <div style="font-size:12px;opacity:.5">抽卡即结缘，每日免费 3 次</div>
+  </div>
+</section>
+
+<!-- ===== 结果 ===== -->
+<section class="screen" id="s-result">
+  <div class="card-flip" id="result-flip">
+    <div class="card-inner">
+      <div class="card-front">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--gold2);opacity:.3">缘</div>
+      </div>
+      <div class="card-back" id="result-card"></div>
+    </div>
+  </div>
+  <div class="verse" id="result-verse"></div>
+  <div class="actions">
+    <button onclick="draw()">再抽一支</button>
+    <button class="primary" onclick="bringHome()">带 TA 回家</button>
+    <button onclick="go('s-draw')">回到签筒</button>
+  </div>
+</section>
+
+<!-- ===== 卡册 ===== -->
+<section class="screen" id="s-album">
+  <div class="topbar"><div class="logo">卡册</div><nav>
+    <button onclick="go('s-draw')">抽签</button></nav></div>
+  <h2>缘分册</h2>
+  <div class="album" id="album"></div>
+</section>
+
+<!-- ===== 小家 ===== -->
+<section class="screen" id="s-home2">
+  <div class="topbar"><div class="logo">小家</div><nav>
+    <button onclick="go('s-draw')">抽签</button></nav></div>
+  <h2>两人即成家</h2>
+  <div id="home-empty" style="text-align:center;opacity:.7;padding:40px 0">
+    你还没把谁带回家<br><br>
+    <button class="btn-main" onclick="go('s-draw')">去抽一支</button>
+  </div>
+  <div id="home-full" style="display:none;flex-direction:column;align-items:center;gap:8px;width:100%">
+    <div class="home-card"><img id="home-photo"><div class="nm" id="home-name"></div></div>
+    <div class="stage-label" id="home-stage">初遇</div>
+    <div class="bond">
+      <div style="display:flex;justify-content:space-between;font-size:12px;opacity:.7">
+        <span>亲密度</span><span id="bond-num">0</span></div>
+      <div class="bar"><i id="bond-fill" style="width:0%"></i></div>
+    </div>
+    <div class="act-grid">
+      <button onclick="act('say')">好好说话</button>
+      <button onclick="act('live')">慢慢过日子</button>
+      <button onclick="act('half')">各撑一半</button>
+    </div>
+    <div class="acts-left" id="acts-left"></div>
+    <div class="dialog" id="dialog"></div>
+    <button onclick="shareCard()" style="margin-top:12px;font-size:12px;opacity:.6;letter-spacing:.2em">生成分享卡</button>
+  </div>
+</section>
+
+<!-- 每日签浮层 -->
+<section class="screen" id="s-daily">
+  <div class="topbar"><div class="logo">今日一签</div><nav>
+    <button onclick="go('s-draw')">关闭</button></nav></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px">
+    <div class="daily" id="daily-text"></div>
+    <div class="lucky" id="daily-bonus"></div>
+  </div>
+</section>
+
+<div class="footer">人物均为 AI 生成 · 内容仅供娱乐参考</div>
+
+<script>
+/* ============ 数据 ============ */
+const BASE="https://cdn.jsdelivr.net/gh/mengxxx111/yiban-assets@main";
+const AGES=["20s","25s","30s","35s","40s"];
+const STYLES={
+  "光系":{en:"sunny",desc:"明亮"},
+  "暖系":{en:"warm",desc:"温柔"},
+  "澈系":{en:"cool",desc:"清冷"},
+  "安系":{en:"distant",desc:"沉稳"}
+};
+const RARITY=[
+  {k:"N",w:55,color:"var(--n)"},
+  {k:"R",w:30,color:"var(--r)"},
+  {k:"SR",w:12,color:"var(--sr)"},
+  {k:"SSR",w:3,color:"var(--ssr)"}
+];
+const NAMES=["昭","昀","晗","曦","晴","晏","晗","栩","慕","慕","辞","念","安","寻","遇","笙","晚","星","河","川"];
+const VERSES={
+  "光系":["你是照亮屋檐的那束光","晴天里的光，落在你肩上","遇见你的那天，云都亮了"],
+  "暖系":["你是冬日窗台上的一盏灯","温柔的人，慢慢走近","烟火气里，最暖是你"],
+  "澈系":["你是雪后初晴的那面湖","清冷的外表，藏着温柔","初见时，你像一场初雪"],
+  "安系":["你是深夜归家时留的那盏灯","沉稳的人，最心安","岁月漫长，你在就好"]
+};
+const STAGES=[{n:"初遇",min:0},{n:"相熟",min:30},{n:"相知",min:60},{n:"相守",min:100}];
+const ACT_LINES={
+  say:["你说：今天有点累。我说：那我把饭做好。","你说：刚才那句话重了。我说：我知道。","你说：想你了。我说：我也想你。"],
+  live:["我们一起擦了窗户","晚饭是你做的，我洗的碗","饭后散步，走了很远"],
+  half:["你撑着伞，我提着菜","你说你忙，我说我来","我们各让一步，刚好"]
+};
+
+/* ============ 状态 ============ */
+let S=load();
+function load(){
+  try{return JSON.parse(localStorage.getItem("yiban-game")||"{}")}catch(e){return{}}
+}
+function save(){localStorage.setItem("yiban-game",JSON.stringify(S))}
+
+/* ============ 工具 ============ */
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  // 不同页面配不同背景
+  const bg=document.getElementById("bg");
+  if(id==="s-home2"){
+    bg.style.backgroundImage="url('assets/bg-dusk.jpg')";
+  } else {
+    bg.style.backgroundImage="url('assets/bg-night.jpg')";
+  }
+  render();
+}
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(arr){return arr[rnd(0,arr.length-1)]}
+
+/* ============ 建档 ============ */
+function buildChips(){
+  const mk=(id,opts,onPick)=>{
+    const el=document.getElementById(id);
+    el.innerHTML="";
+    opts.forEach(o=>{
+      const b=document.createElement("button");
+      b.className="chip"+((S.setup||{})[id]===o?" on":"");
+      b.textContent=o;
+      b.onclick=()=>{
+        S.setup=S.setup||{};S.setup[id]=o;save();buildChips();
+      };
+      el.appendChild(b);
+    });
+  };
+  mk("c-sex",["男","女"]);
+  mk("c-age",AGES.map(a=>a.replace("s","代")));
+  mk("c-style",Object.keys(STYLES));
+}
+function setup(){
+  if(!S.setup||!S.setup["c-sex"]||!S.setup["c-age"]||!S.setup["c-style"]){
+    alert("三项都选一下");return
+  }
+  S.played=true;save();
+  go("s-draw");
+}
+
+/* ============ 抽卡 ============ */
+function draw(){
+  const tk=todayKey();
+  S.days=S.days||{};
+  const d=S.days[tk]||{draws:0,acts:3,signed:false};
+  if(d.draws>=3 && !d.bonus){alert("今日免费 3 抽已用完，明天再来");return}
+  if(d.bonus>0){d.bonus--}else{d.draws++}
+  S.days[tk]=d;save();
+
+  // 稀有度
+  const pity=(S.pity||0)+1;
+  let pool=RARITY.map(r=>({...r,n:r.w}));
+  if(pity>=50) pool=RARITY.map(r=>({...r,n:r.k==="SSR"?100:0}));
+  else if(pity>=10) pool=RARITY.map(r=>({...r,n:r.k==="SR"||r.k==="SSR"?60:0}));
+  const total=pool.reduce((s,r)=>s+r.n,0);
+  let roll=Math.random()*total,rarity="N";
+  for(const p of pool){if(roll<p.n){rarity=p.k;break}roll-=p.n}
+  if(rarity==="SR"||rarity==="SSR") S.pity=0; else S.pity=pity;
+
+  // 图
+  const gender=S.setup["c-sex"]==="男"?"female":"male";
+  const styleCN=S.setup["c-style"];
+  const age=AGES[AGES.indexOf(S.setup["c-age"].replace("代","s"))];
+  const style=STYLES[styleCN];
+  const n=rnd(1,60);
+  const url=`${BASE}/${gender}/${age}/${encodeURIComponent(styleCN)}/${gender}-${age}-${style.en}-${String(n).padStart(3,"0")}.webp`;
+  const id=`${gender}-${age}-${style.en}-${n}`;
+  const card={id,url,rarity,style:styleCN,age:age,gender};
+
+  // 卡册
+  S.album=S.album||{};
+  if(!S.album[id]) S.album[id]=card;
+
+  // 结果
+  const flip=document.getElementById("result-flip");
+  flip.classList.remove("flipped");
+  document.getElementById("result-card").className="card-back frame-"+rarity;
+  document.getElementById("result-card").innerHTML=`
+    <img class="photo" src="${url}" onerror="this.style.display='none'" style="width:100%;height:75%;object-fit:cover">
+    <div class="info" style="padding:10px 12px;background:var(--ink2)">
+      <div class="name">${pick(NAMES)} · ${styleCN}</div>
+      <div class="rarity rarity-${rarity.toLowerCase()}">${rarity}</div>
+    </div>`;
+  document.getElementById("result-verse").textContent=pick(VERSES[styleCN]);
+
+  go("s-result");
+  setTimeout(()=>flip.classList.add("flipped"),300);
+}
+
+/* ============ 小家 ============ */
+function bringHome(){
+  if(!S.album) return;
+  const last=Object.values(S.album).pop();
+  S.home=last;save();
+  go("s-home2");
+}
+function renderHome(){
+  const full=document.getElementById("home-full");
+  const empty=document.getElementById("home-empty");
+  if(!S.home){empty.style.display="block";full.style.display="none";return}
+  empty.style.display="none";full.style.display="flex";
+  document.getElementById("home-photo").src=S.home.url;
+  document.getElementById("home-name").textContent=S.home.style+" · "+S.home.rarity;
+  const bond=S.bond||0;
+  document.getElementById("bond-num").textContent=bond;
+  document.getElementById("bond-fill").style.width=Math.min(100,bond)+"%";
+  const st=STAGES.slice().reverse().find(s=>bond>=s.min);
+  document.getElementById("home-stage").textContent=st?st.n:"初遇";
+  const tk=todayKey();
+  const left=(S.days||{})[tk]?.acts??3;
+  document.getElementById("acts-left").textContent="今日还可相处 "+left+" 次";
+}
+function act(type){
+  const tk=todayKey();
+  S.days=S.days||{};
+  const d=S.days[tk]||{acts:3};
+  if(d.acts<=0){alert("今日相处次数用完了，明天再来");return}
+  d.acts--;
+  S.days[tk]=d;
+  S.bond=(S.bond||0)+rnd(8,12);
+  save();
+  checkStage();
+  document.getElementById("dialog").textContent=pick(ACT_LINES[type]);
+  renderHome();
+}
+
+/* ============ 每日签 ============ */
+const DAILY_SIGNS=[
+  "今天宜勇敢，想说的话别藏着","今天宜慢一点，别催对方","今天宜主动，一杯水也是关心","今天宜独处，留点空间给彼此",
+  "今天宜说真话，哪怕有点疼","今天宜笑一笑，昨天的事就翻篇","今天宜牵手，走路时别玩手机","今天宜做饭，烟火气最养人"
+];
+function openDaily(){
+  const tk=todayKey();
+  S.days=S.days||{};
+  const d=S.days[tk]||{};
+  if(!d.signed){
+    d.signed=true;d.bonus=(d.bonus||0)+1;
+    S.days[tk]=d;save();
+  }
+  document.getElementById("daily-text").textContent=pick(DAILY_SIGNS);
+  document.getElementById("daily-bonus").textContent=d.signed?"今日已签 · 送 1 次免费抽":"今日已签";
+  go("s-daily");
+}
+
+/* ============ 分享卡 ============ */
+function shareCard(){
+  if(!S.home) return;
+  const c=document.createElement("canvas");
+  c.width=600;c.height=900;
+  const ctx=c.getContext("2d");
+  ctx.fillStyle="#0B0E1A";ctx.fillRect(0,0,600,900);
+  ctx.strokeStyle="#C9A227";ctx.lineWidth=2;ctx.strokeRect(40,40,520,820);
+  ctx.fillStyle="#E8D5A3";ctx.font="28px serif";ctx.textAlign="center";
+  ctx.fillText("一半 · 缘",300,100);
+  ctx.fillStyle="#F2EADA";ctx.font="20px serif";
+  ctx.fillText("我把 TA 带回了家",300,160);
+  ctx.font="16px serif";ctx.fillStyle="#999";
+  ctx.fillText(S.home.style+" · "+S.home.rarity,300,200);
+  ctx.fillStyle="#C9A227";ctx.font="18px serif";
+  ctx.fillText("亲密度 "+(S.bond||0),300,780);
+  ctx.fillStyle="#666";ctx.font="14px serif";
+  ctx.fillText("来一半·缘，遇见你的另一半",300,830);
+  const a=document.createElement("a");
+  a.download="yiban-share.png";a.href=c.toDataURL("image/png");
+  a.click();
+}
+
+/* ============ 阶段解锁提示 ============ */
+function checkStage(){
+  const bond=S.bond||0;
+  const prev=S.lastStage||"初遇";
+  const cur=STAGES.slice().reverse().find(s=>bond>=s.min);
+  if(cur && cur.n!==prev){
+    S.lastStage=cur.n;save();
+    setTimeout(()=>{alert("关系进阶："+prev+" → "+cur.n+"\n"+(cur.n==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"))},300);
+  }
+}
+
+/* ============ 渲染 ============ */
+function render(){
+  const tk=todayKey();
+  const d=(S.days||{})[tk]||{draws:0};
+  const left=Math.max(0,3-d.draws);
+  const dc=document.getElementById("draw-counts");
+  if(dc) dc.textContent="今日余 "+left+" 签";
+
+  const ab=document.getElementById("album");
+  if(ab){
+    ab.innerHTML="";
+    const all=Object.values(S.album||{});
+    all.forEach(c=>{
+      const div=document.createElement("div");
+      div.className="item owned";
+      div.innerHTML=`<img src="${c.url}" onerror="this.style.display='none'">`;
+      ab.appendChild(div);
+    });
+  }
+  renderHome();
+}
+
+/* 启动 */
+document.getElementById("bg").style.backgroundImage="url('assets/bg-night.jpg')";
+buildChips();
+render();
+</script>
+</body>
+</html>
