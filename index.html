@@ -498,18 +498,34 @@ function shareCard(){
   const c=document.createElement("canvas");
   c.width=600;c.height=900;
   const ctx=c.getContext("2d");
-  ctx.fillStyle="#0B0E1A";ctx.fillRect(0,0,600,900);
-  ctx.strokeStyle="#C9A227";ctx.lineWidth=2;ctx.strokeRect(40,40,520,820);
+  // 背景
+  const grad=ctx.createLinearGradient(0,0,0,900);
+  grad.addColorStop(0,"#0B0E1A");
+  grad.addColorStop(1,"#1a1f35");
+  ctx.fillStyle=grad;ctx.fillRect(0,0,600,900);
+  // 边框
+  ctx.strokeStyle="#C9A227";ctx.lineWidth=2;
+  ctx.strokeRect(40,40,520,820);
+  // 内边框
+  ctx.strokeStyle="rgba(201,162,39,.3)";ctx.lineWidth=1;
+  ctx.strokeRect(50,50,500,800);
+  // 标题
   ctx.fillStyle="#E8D5A3";ctx.font="28px serif";ctx.textAlign="center";
   ctx.fillText("一半 · 缘",300,100);
+  // 装饰线
+  ctx.strokeStyle="rgba(201,162,39,.5)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(200,120);ctx.lineTo(400,120);ctx.stroke();
+  // 副标题
   ctx.fillStyle="#F2EADA";ctx.font="20px serif";
   ctx.fillText("我把 TA 带回了家",300,160);
   ctx.font="16px serif";ctx.fillStyle="#999";
   ctx.fillText(S.home.style+" · "+S.home.rarity,300,200);
+  // 亲密度
   ctx.fillStyle="#C9A227";ctx.font="18px serif";
   ctx.fillText("亲密度 "+(S.bond||0),300,780);
   ctx.fillStyle="#666";ctx.font="14px serif";
   ctx.fillText("来一半·缘，遇见你的另一半",300,830);
+  // 下载
   const a=document.createElement("a");
   a.download="yiban-share.png";a.href=c.toDataURL("image/png");
   a.click();
