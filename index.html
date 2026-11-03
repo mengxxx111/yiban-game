@@ -175,6 +175,8 @@
   #s-home.active .btn-main{animation:fadeIn .8s ease .6s both}
 
   /* 屏幕切换动画 */
+  .screen.active{animation:screenIn .4s ease}
+  @keyframes screenIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
   .screen.active h2{animation:fadeIn .5s ease both}
   .screen.active .group-label{animation:fadeIn .5s ease .1s both}
   .screen.active .chips{animation:fadeIn .5s ease .2s both}
