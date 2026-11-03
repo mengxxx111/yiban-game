@@ -569,12 +569,16 @@ function render(){
   if(ab){
     ab.innerHTML="";
     const all=Object.values(S.album||{});
-    all.forEach(c=>{
-      const div=document.createElement("div");
-      div.className="item owned";
-      div.innerHTML=`<img src="${c.url}" onerror="this.style.display='none'">`;
-      ab.appendChild(div);
-    });
+    if(all.length===0){
+      ab.innerHTML='<div style="grid-column:1/-1;text-align:center;opacity:.5;padding:40px 0;font-size:13px;letter-spacing:.1em">还没有收藏<br><br>去抽一支吧</div>';
+    } else {
+      all.forEach(c=>{
+        const div=document.createElement("div");
+        div.className="item owned";
+        div.innerHTML=`<img src="${c.url}" onerror="this.style.display='none'">`;
+        ab.appendChild(div);
+      });
+    }
   }
   renderHome();
 }
