@@ -472,7 +472,14 @@ function checkStage(){
   const cur=STAGES.slice().reverse().find(s=>bond>=s.min);
   if(cur && cur.n!==prev){
     S.lastStage=cur.n;save();
-    setTimeout(()=>{alert("关系进阶："+prev+" → "+cur.n+"\n"+(cur.n==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"))},300);
+    const stageImg={
+      "初遇":"assets/illus-first-meet-001.jpg",
+      "相熟":"assets/illus-know-each-other-001.jpg",
+      "相知":"assets/illus-know-each-other-001.jpg",
+      "相守":"assets/illus-together-001.jpg"
+    };
+    const msg="关系进阶："+prev+" → "+cur.n;
+    setTimeout(()=>{alert(msg+"\n"+(cur.n==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"))},300);
   }
 }
 
