@@ -375,6 +375,19 @@ function draw(){
   if(d.bonus>0){d.bonus--}else{d.draws++}
   S.days[tk]=d;save();
 
+  // 粒子特效
+  const lottery=document.getElementById("lottery");
+  for(let i=0;i<12;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    p.style.left="50%";p.style.top="50%";
+    p.style.background=Math.random()>0.5?"var(--gold2)":"var(--gold)";
+    p.style.setProperty("--dx",(Math.random()-0.5)*200+"px");
+    p.style.setProperty("--dy",(Math.random()-0.5)*200+"px");
+    lottery.appendChild(p);
+    setTimeout(()=>p.remove(),1000);
+  }
+
   // 稀有度
   const pity=(S.pity||0)+1;
   let pool=RARITY.map(r=>({...r,n:r.w}));
