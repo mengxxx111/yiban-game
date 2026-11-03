@@ -67,6 +67,14 @@
   .lottery.shaking{animation:shake .5s ease}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
+  /* 粒子特效 */
+  .particle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none;
+    animation:particleFly 1s ease-out forwards}
+  @keyframes particleFly{
+    0%{opacity:1;transform:translate(0,0) scale(1)}
+    100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
+  }
+
   /* 卡牌翻转 */
   .card-flip{perspective:1200px;width:260px;height:360px}
   .card-inner{position:relative;width:100%;height:100%;transition:transform 1s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
@@ -275,16 +283,16 @@ const RARITY=[
 ];
 const NAMES=["昭","昀","晗","曦","晴","晏","晗","栩","慕","慕","辞","念","安","寻","遇","笙","晚","星","河","川"];
 const VERSES={
-  "光系":["你是照亮屋檐的那束光","晴天里的光，落在你肩上","遇见你的那天，云都亮了"],
-  "暖系":["你是冬日窗台上的一盏灯","温柔的人，慢慢走近","烟火气里，最暖是你"],
-  "澈系":["你是雪后初晴的那面湖","清冷的外表，藏着温柔","初见时，你像一场初雪"],
-  "安系":["你是深夜归家时留的那盏灯","沉稳的人，最心安","岁月漫长，你在就好"]
+  "光系":["你是照亮屋檐的那束光","晴天里的光，落在你肩上","遇见你的那天，云都亮了","你像清晨的第一缕阳光，温柔却有力量","有你的地方，就是晴天","阳光刚好落在你发梢"],
+  "暖系":["你是冬日窗台上的一盏灯","温柔的人，慢慢走近","烟火气里，最暖是你","你笑起来的样子，像冬天里的热可可","和你在一起，连空气都是暖的","你是我疲惫生活里的温柔梦想"],
+  "澈系":["你是雪后初晴的那面湖","清冷的外表，藏着温柔","初见时，你像一场初雪","你像秋天的湖水，安静又深邃","你的眼睛里，有星星也有湖水","清冷的气质，温柔的心"],
+  "安系":["你是深夜归家时留的那盏灯","沉稳的人，最心安","岁月漫长，你在就好","和你在一起，时间都慢了","你是我安稳岁月里的小确幸","有你在，哪里都是家"]
 };
 const STAGES=[{n:"初遇",min:0},{n:"相熟",min:30},{n:"相知",min:60},{n:"相守",min:100}];
 const ACT_LINES={
-  say:["你说：今天有点累。我说：那我把饭做好。","你说：刚才那句话重了。我说：我知道。","你说：想你了。我说：我也想你。"],
-  live:["我们一起擦了窗户","晚饭是你做的，我洗的碗","饭后散步，走了很远"],
-  half:["你撑着伞，我提着菜","你说你忙，我说我来","我们各让一步，刚好"]
+  say:["你说：今天有点累。我说：那我把饭做好。","你说：刚才那句话重了。我说：我知道。","你说：想你了。我说：我也想你。","你说：我是不是很麻烦？我说：你是我的小麻烦。","你说：今天好难过。我说：抱抱，我在。","你说：谢谢你。我说：跟我还客气什么。"],
+  live:["我们一起擦了窗户","晚饭是你做的，我洗的碗","饭后散步，走了很远","周末一起整理了书架","你浇花，我拖地","我们一起看了一部老电影"],
+  half:["你撑着伞，我提着菜","你说你忙，我说我来","我们各让一步，刚好","你加班，我留灯","你早起，我做早餐","你难的时候，我顶上去"]
 };
 
 /* ============ 状态 ============ */
@@ -302,8 +310,10 @@ function go(id){
   const bg=document.getElementById("bg");
   if(id==="s-home2"){
     bg.style.backgroundImage="url('assets/bg-dusk.jpg')";
+  } else if(id==="s-daily"){
+    bg.style.backgroundImage="url('assets/bg-morning.jpg')";
   } else {
-    bg.style.backgroundImage="url('assets/bg-night.jpg')";
+    bg.style.backgroundImage="url('assets/bg-night-new.png')";
   }
   render();
 }
@@ -427,7 +437,9 @@ function act(type){
 /* ============ 每日签 ============ */
 const DAILY_SIGNS=[
   "今天宜勇敢，想说的话别藏着","今天宜慢一点，别催对方","今天宜主动，一杯水也是关心","今天宜独处，留点空间给彼此",
-  "今天宜说真话，哪怕有点疼","今天宜笑一笑，昨天的事就翻篇","今天宜牵手，走路时别玩手机","今天宜做饭，烟火气最养人"
+  "今天宜说真话，哪怕有点疼","今天宜笑一笑，昨天的事就翻篇","今天宜牵手，走路时别玩手机","今天宜做饭，烟火气最养人",
+  "今天宜拥抱，从背后抱一下也好","今天宜写信，哪怕只是一句话","今天宜散步，夕阳下的路很长","今天宜做饭，两个人一起吃才香",
+  "今天宜道歉，低个头不丢人","今天宜夸夸对方，今天辛苦你了","今天宜发呆，什么都不做也很好","今天宜回忆，第一次见面的样子还记得吗"
 ];
 function openDaily(){
   const tk=todayKey();
@@ -465,22 +477,28 @@ function shareCard(){
   a.click();
 }
 
-/* ============ 阶段解锁提示 ============ */
+/* ============ 阶段解锁弹窗 ============ */
 function checkStage(){
   const bond=S.bond||0;
   const prev=S.lastStage||"初遇";
   const cur=STAGES.slice().reverse().find(s=>bond>=s.min);
   if(cur && cur.n!==prev){
     S.lastStage=cur.n;save();
-    const stageImg={
-      "初遇":"assets/illus-first-meet-001.jpg",
-      "相熟":"assets/illus-acquainted-001.jpg",
-      "相知":"assets/illus-know-each-other-001.jpg",
-      "相守":"assets/illus-together-001.jpg"
-    };
-    const msg="关系进阶："+prev+" → "+cur.n;
-    setTimeout(()=>{alert(msg+"\n"+(cur.n==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"))},300);
+    setTimeout(()=>showStageModal(prev,cur.n),500);
   }
+}
+function showStageModal(prev,cur){
+  const overlay=document.createElement("div");
+  overlay.style.cssText="position:fixed;inset:0;z-index:100;background:rgba(11,14,26,.9);display:flex;align-items:center;justify-content:center;animation:fadeIn .5s ease";
+  overlay.innerHTML=`
+    <div style="text-align:center;max-width:320px;padding:40px 20px;animation:pop .6s cubic-bezier(.2,1.4,.4,1)">
+      <div style="font-size:12px;letter-spacing:.3em;color:var(--gold2);opacity:.7;margin-bottom:16px">关系进阶</div>
+      <div style="font-size:24px;letter-spacing:.2em;margin-bottom:8px">${prev} → ${cur}</div>
+      <div style="font-size:13px;opacity:.6;margin-bottom:24px;line-height:1.8">${cur==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"}</div>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 40px;border:1px solid var(--gold);color:var(--gold2);font-size:14px;letter-spacing:.2em;background:rgba(201,162,39,.1)">继续</button>
+    </div>`;
+  overlay.onclick=()=>overlay.remove();
+  document.body.appendChild(overlay);
 }
 
 /* ============ 渲染 ============ */
@@ -506,7 +524,7 @@ function render(){
 }
 
 /* 启动 */
-document.getElementById("bg").style.backgroundImage="url('assets/bg-night.jpg')";
+document.getElementById("bg").style.backgroundImage="url('assets/bg-night-new.png')";
 buildChips();
 render();
 </script>
