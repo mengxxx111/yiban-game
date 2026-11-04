@@ -554,9 +554,30 @@ function shareCard(){
   ctx.fillText("我把 TA 带回了家",300,160);
   ctx.font="16px serif";ctx.fillStyle="#999";
   ctx.fillText(S.home.style+" · "+S.home.rarity,300,200);
-  // 亲密度
+  // 阶段插画占位
+  ctx.fillStyle="rgba(201,162,39,.1)";
+  ctx.fillRect(150,240,300,200);
+  ctx.strokeStyle="rgba(201,162,39,.3)";
+  ctx.strokeRect(150,240,300,200);
+  ctx.fillStyle="rgba(232,213,163,.5)";ctx.font="14px serif";
+  ctx.fillText("两人的小家",300,350);
+  // 亲密度进度条
+  ctx.fillStyle="rgba(255,255,255,.1)";
+  ctx.fillRect(150,500,300,6);
+  const bond=S.bond||0;
+  const bondGrad=ctx.createLinearGradient(150,0,450,0);
+  bondGrad.addColorStop(0,"#C9A227");
+  bondGrad.addColorStop(1,"#E8D5A3");
+  ctx.fillStyle=bondGrad;
+  ctx.fillRect(150,500,Math.min(300,bond*3),6);
+  // 亲密度文字
   ctx.fillStyle="#C9A227";ctx.font="18px serif";
-  ctx.fillText("亲密度 "+(S.bond||0),300,780);
+  ctx.fillText("亲密度 "+bond,300,540);
+  // 阶段
+  const st=STAGES.slice().reverse().find(s=>bond>=s.min);
+  ctx.fillStyle="#999";ctx.font="14px serif";
+  ctx.fillText(st?st.n:"初遇",300,570);
+  // 底部
   ctx.fillStyle="#666";ctx.font="14px serif";
   ctx.fillText("来一半·缘，遇见你的另一半",300,830);
   // 下载
