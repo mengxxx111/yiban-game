@@ -136,6 +136,11 @@
   .home-card img{width:100%;height:75%;object-fit:cover;transition:transform .4s}
   .home-card:hover img{transform:scale(1.05)}
   .home-card .nm{padding:8px;text-align:center;font-size:14px;letter-spacing:.1em}
+  .home-scene{width:280px;height:160px;border-radius:8px;overflow:hidden;margin:12px 0;
+    border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.2);transition:all .5s}
+  .home-scene img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .home-scene:hover img{transform:scale(1.05)}
+  .home-scene-label{font-size:11px;opacity:.5;letter-spacing:.15em;margin-bottom:4px}
   .bond{width:100%;max-width:300px;margin:12px 0}
   .bond .bar{height:6px;background:rgba(255,255,255,.1);margin-top:4px;position:relative;border-radius:3px;overflow:hidden}
   .bond .bar i{position:absolute;left:0;top:0;height:100%;background:var(--gold);transition:width .6s}
@@ -285,6 +290,8 @@
         <span>亲密度</span><span id="bond-num">0</span></div>
       <div class="bar"><i id="bond-fill" style="width:0%"></i></div>
     </div>
+    <div class="home-scene-label">小家一角</div>
+    <div class="home-scene"><img id="home-scene-img" src="assets/home-living.png"></div>
     <div class="act-grid">
       <button onclick="act('say')">好好说话</button>
       <button onclick="act('live')">慢慢过日子</button>
@@ -473,6 +480,14 @@ function renderHome(){
   document.getElementById("bond-fill").style.width=Math.min(100,bond)+"%";
   const st=STAGES.slice().reverse().find(s=>bond>=s.min);
   document.getElementById("home-stage").textContent=st?st.n:"初遇";
+  // 根据阶段切换场景插画
+  const sceneImg=document.getElementById("home-scene-img");
+  if(st){
+    if(st.n==="初遇") sceneImg.src="assets/home-living.png";
+    else if(st.n==="相熟") sceneImg.src="assets/home-bedroom.png";
+    else if(st.n==="相知") sceneImg.src="assets/home-balcony.png";
+    else sceneImg.src="assets/home-living.png";
+  }
   const tk=todayKey();
   const left=(S.days||{})[tk]?.acts??3;
   document.getElementById("acts-left").textContent="今日还可相处 "+left+" 次";
