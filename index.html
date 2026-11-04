@@ -576,13 +576,14 @@ function checkStage(){
   }
 }
 function showStageModal(prev,cur){
-  // 阶段对应过渡插画
-  const sceneMap={
-    "初遇→相熟":"assets/transition-train.png",
-    "相熟→相知":"assets/transition-window.png",
-    "相知→相守":"assets/transition-door.png"
+  // 阶段对应纪念插画
+  const stageImgMap={
+    "初遇":"assets/stage-first-meet.png",
+    "相熟":"assets/stage-acquainted.png",
+    "相知":"assets/stage-knowing.png",
+    "相守":"assets/stage-together.png"
   };
-  const scene=sceneMap[`${prev}→${cur}`]||"assets/transition-train.png";
+  const scene=stageImgMap[cur]||"assets/stage-first-meet.png";
   const overlay=document.createElement("div");
   overlay.style.cssText="position:fixed;inset:0;z-index:100;background:rgba(11,14,26,.9);display:flex;align-items:center;justify-content:center;animation:fadeIn .5s ease";
   overlay.innerHTML=`
