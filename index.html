@@ -576,14 +576,24 @@ function checkStage(){
   }
 }
 function showStageModal(prev,cur){
+  // 阶段对应过渡插画
+  const sceneMap={
+    "初遇→相熟":"assets/transition-train.png",
+    "相熟→相知":"assets/transition-window.png",
+    "相知→相守":"assets/transition-door.png"
+  };
+  const scene=sceneMap[`${prev}→${cur}`]||"assets/transition-train.png";
   const overlay=document.createElement("div");
   overlay.style.cssText="position:fixed;inset:0;z-index:100;background:rgba(11,14,26,.9);display:flex;align-items:center;justify-content:center;animation:fadeIn .5s ease";
   overlay.innerHTML=`
     <div style="text-align:center;max-width:320px;padding:40px 20px;animation:pop .6s cubic-bezier(.2,1.4,.4,1)">
       <div style="font-size:12px;letter-spacing:.3em;color:var(--gold2);opacity:.7;margin-bottom:16px">关系进阶</div>
+      <div style="width:240px;height:140px;margin:0 auto 20px;border-radius:8px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 32px rgba(0,0,0,.3)">
+        <img src="${scene}" style="width:100%;height:100%;object-fit:cover">
+      </div>
       <div style="font-size:24px;letter-spacing:.2em;margin-bottom:8px">${prev} → ${cur}</div>
       <div style="font-size:13px;opacity:.6;margin-bottom:24px;line-height:1.8">${cur==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"}</div>
-      <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 40px;border:1px solid var(--gold);color:var(--gold2);font-size:14px;letter-spacing:.2em;background:rgba(201,162,39,.1)">继续</button>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 40px;border:1px solid var(--gold);color:var(--gold2);font-size:14px;letter-spacing:.2em;background:rgba(201,162,39,.1);border-radius:20px;transition:all .3s">继续</button>
     </div>`;
   overlay.onclick=()=>overlay.remove();
   document.body.appendChild(overlay);
