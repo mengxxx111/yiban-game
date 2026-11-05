@@ -458,14 +458,7 @@ function draw(){
   const age=AGES[AGES.indexOf(S.setup["c-age"].replace("代","s"))];
   const style=STYLES[styleCN];
   const n=rnd(1,60);
-  // 暂时用本地插画占位，等 CDN 恢复后替换
-  const placeholderImgs = [
-    "assets/illus-first-meet-001.jpg",
-    "assets/illus-acquainted-001.jpg",
-    "assets/illus-know-each-other-001.jpg",
-    "assets/illus-together-001.jpg"
-  ];
-  const url = placeholderImgs[Math.floor(Math.random()*placeholderImgs.length)];
+  const url=`${BASE}/${gender}/${age}/${encodeURIComponent(styleCN)}/${gender}-${age}-${style.en}-${String(n).padStart(3,"0")}.webp`;
   const id=`${gender}-${age}-${style.en}-${n}`;
   const card={id,url,rarity,style:styleCN,age:age,gender};
 
