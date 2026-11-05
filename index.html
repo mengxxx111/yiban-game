@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>涓€鍗?路 缂?/title>
+<title>一半 · 缘</title>
 <style>
   :root{
     --ink:#0B0E1A; --ink2:#141828; --gold:#C9A227; --gold2:#E8D5A3;
@@ -16,7 +16,7 @@
   body{font-size:16px;line-height:1.6}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
-  /* ===== 鑳屾櫙灞?===== */
+  /* ===== 背景层 ===== */
   .bg{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;
     opacity:.5;filter:saturate(.9);animation:bgDrift 30s ease-in-out infinite alternate}
   @keyframes bgDrift{from{transform:scale(1.05) translate(0,0)}to{transform:scale(1.1) translate(-1%,-1%)}}
@@ -24,12 +24,12 @@
   .bg::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,rgba(11,14,26,.3) 0%,rgba(11,14,26,.85) 70%,var(--ink) 100%)}
 
-  /* ===== 灞忓箷瀹瑰櫒 ===== */
+  /* ===== 屏幕容器 ===== */
   .screen{position:fixed;inset:0;z-index:1;display:none;flex-direction:column;
     align-items:center;padding:24px;overflow-y:auto}
   .screen.active{display:flex}
 
-  /* ===== 棣栧睆 ===== */
+  /* ===== 首屏 ===== */
   #s-home{justify-content:center;text-align:center}
   #s-home h1{font-size:48px;letter-spacing:.4em;font-weight:400;margin-bottom:12px;font-family:serif}
   #s-home h1 span{color:var(--gold2)}
@@ -41,7 +41,7 @@
     box-shadow:0 8px 24px rgba(201,162,39,.2)}
   .btn-main:active{background:rgba(201,162,39,.25);transform:translateY(0)}
 
-  /* ===== 閫氱敤 ===== */
+  /* ===== 通用 ===== */
   .topbar{width:100%;max-width:420px;display:flex;justify-content:space-between;
     align-items:center;margin-bottom:20px;opacity:.85}
   .topbar .logo{font-size:16px;letter-spacing:.2em;color:var(--gold2);font-family:serif;font-weight:500}
@@ -63,14 +63,14 @@
   .chip:hover{border-color:var(--gold2);transform:translateY(-1px)}
   .chip.on{border-color:var(--gold);color:var(--gold2);background:rgba(201,162,39,.12)}
 
-  /* ===== 鎶藉崱椤?===== */
+  /* ===== 抽卡页 ===== */
   .draw-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
   .lottery{width:160px;height:220px;border:1px solid var(--gold);background:var(--ink2);
     display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:.3em;
     color:var(--gold2);transition:all .4s;cursor:pointer;position:relative;overflow:hidden;
     background-image:url('assets/cardback-ssr.jpg');background-size:cover;background-position:center;
     border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,.3)}
-  .lottery::before{content:"鎶戒竴鏀?;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  .lottery::before{content:"抽一支";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:rgba(11,14,26,.7);font-size:14px;letter-spacing:.3em;backdrop-filter:blur(2px);
     transition:background .3s}
   .lottery:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(201,162,39,.3)}
@@ -79,7 +79,7 @@
   .lottery.shaking{animation:shake .5s ease}
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-  /* 绮掑瓙鐗规晥 */
+  /* 粒子特效 */
   .particle{position:absolute;width:4px;height:4px;border-radius:50%;pointer-events:none;
     animation:particleFly 1.2s ease-out forwards;box-shadow:0 0 6px currentColor}
   @keyframes particleFly{
@@ -87,7 +87,7 @@
     100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}
   }
 
-  /* 鍗＄墝缈昏浆 */
+  /* 卡牌翻转 */
   .card-flip{perspective:1200px;width:260px;height:360px}
   .card-inner{position:relative;width:100%;height:100%;transition:transform 1s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
   .card-flip.flipped .card-inner{transform:rotateY(180deg)}
@@ -95,11 +95,11 @@
     box-shadow:0 16px 48px rgba(0,0,0,.4)}
   .card-front{background:linear-gradient(135deg,var(--ink2),#1a1f35);display:flex;flex-direction:column;align-items:center;justify-content:center;
     border:1px solid var(--gold)}
-  .card-front::before{content:"缂?;font-size:64px;letter-spacing:.2em;color:var(--gold2);opacity:.2;font-family:serif}
-  .card-front::after{content:"HALF 路 DESTINY";font-size:9px;letter-spacing:.3em;color:var(--gold2);opacity:.4;margin-top:20px}
+  .card-front::before{content:"缘";font-size:64px;letter-spacing:.2em;color:var(--gold2);opacity:.2;font-family:serif}
+  .card-front::after{content:"HALF · DESTINY";font-size:9px;letter-spacing:.3em;color:var(--gold2);opacity:.4;margin-top:20px}
   .card-back{background:var(--ink2);transform:rotateY(180deg)}
 
-  /* 鍗＄墝 */
+  /* 卡牌 */
   .card{width:260px;height:360px;border:2px solid var(--line);background:var(--ink2);
     position:relative;overflow:hidden;transition:transform .5s;border-radius:4px}
   .card:hover{transform:translateY(-4px)}
@@ -115,7 +115,7 @@
   .frame-SR{border-color:var(--sr);box-shadow:0 0 24px rgba(201,162,39,.3)}
   .frame-SSR{border-color:var(--ssr);box-shadow:0 0 40px rgba(217,64,64,.5);animation:ssrGlow 2s ease-in-out infinite}
 
-  /* ===== 缁撴灉椤?===== */
+  /* ===== 结果页 ===== */
   #s-result{justify-content:center;gap:20px;text-align:center}
   .verse{font-size:15px;opacity:.85;max-width:300px;letter-spacing:.12em;line-height:2.1;
     padding:20px 24px;border-left:2px solid var(--gold);text-align:left;font-family:serif;
@@ -127,7 +127,7 @@
   .actions button.primary{border-color:var(--gold);color:var(--gold2);background:rgba(201,162,39,.1)}
   .actions button.primary:hover{background:rgba(201,162,39,.2);transform:translateY(-2px)}
 
-  /* ===== 鍗″唽 ===== */
+  /* ===== 卡册 ===== */
   .album{width:100%;max-width:420px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .album .item{aspect-ratio:3/4;border:1px solid var(--line);background:var(--ink2);
     display:flex;align-items:center;justify-content:center;font-size:12px;opacity:.6;
@@ -138,7 +138,7 @@
   .album .item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
   .album .item:hover img{transform:scale(1.05)}
 
-  /* ===== 灏忓 ===== */
+  /* ===== 小家 ===== */
   .home-card{width:200px;height:280px;border:2px solid var(--gold);background:var(--ink2);overflow:hidden;margin-bottom:16px;
     box-shadow:0 8px 32px rgba(201,162,39,.2);transition:all .4s;border-radius:8px}
   .home-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(201,162,39,.3)}
@@ -172,7 +172,7 @@
     font-family:serif;letter-spacing:.05em;box-shadow:0 4px 16px rgba(0,0,0,.15)}
   .acts-left{font-size:12px;opacity:.5;margin-top:8px;padding:4px 12px;background:rgba(255,255,255,.03);border-radius:12px}
 
-  /* 姣忔棩绛?*/
+  /* 每日签 */
   .daily{font-size:16px;max-width:280px;text-align:center;line-height:2.2;letter-spacing:.1em;
     padding:32px 24px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px;
     font-family:serif;box-shadow:0 8px 32px rgba(0,0,0,.2);position:relative}
@@ -180,12 +180,12 @@
     width:40px;height:1px;background:var(--gold);opacity:.5}
   .daily .lucky{font-size:13px;color:var(--gold2);margin-top:16px;letter-spacing:.2em}
 
-  /* 椤佃剼 */
+  /* 页脚 */
   .footer{position:fixed;bottom:8px;left:0;right:0;text-align:center;
     font-size:10px;opacity:.35;letter-spacing:.1em;z-index:2}
   .footer a{color:var(--gold2);text-decoration:none;opacity:.7}
 
-  /* 鍔ㄧ敾 */
+  /* 动画 */
   .fade-in{animation:fadeIn .6s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
@@ -193,25 +193,25 @@
   .flip{animation:flipIn .8s ease}
   @keyframes flipIn{0%{transform:rotateY(90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}
 
-  /* 浜插瘑搴﹁繘搴︽潯鍔ㄧ敾 */
+  /* 亲密度进度条动画 */
   .bond .bar i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));
     transition:width .6s ease;box-shadow:0 0 10px rgba(201,162,39,.5)}
 
-  /* SSR 鍗＄墝鍙戝厜鍔ㄧ敾 */
+  /* SSR 卡牌发光动画 */
   @keyframes ssrGlow{0%,100%{box-shadow:0 0 20px rgba(217,64,64,.3),0 0 40px rgba(217,64,64,.1)}50%{box-shadow:0 0 40px rgba(217,64,64,.6),0 0 80px rgba(217,64,64,.2)}}
 
-  /* 鎸夐挳鐐瑰嚮娉㈢汗 */
+  /* 按钮点击波纹 */
   .btn-main{position:relative;overflow:hidden}
   .btn-main::after{content:"";position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;
     background:rgba(232,213,163,.3);transform:translate(-50%,-50%);transition:width .4s,height .4s}
   .btn-main:active::after{width:300px;height:300px}
 
-  /* 棣栧睆鍏ュ満鍔ㄧ敾 */
+  /* 首屏入场动画 */
   #s-home.active h1{animation:fadeIn .8s ease .2s both}
   #s-home.active .sub{animation:fadeIn .8s ease .4s both}
   #s-home.active .btn-main{animation:fadeIn .8s ease .6s both}
 
-  /* 灞忓箷鍒囨崲鍔ㄧ敾 */
+  /* 屏幕切换动画 */
   .screen.active{animation:screenIn .4s ease}
   @keyframes screenIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
   .screen.active h2{animation:fadeIn .5s ease both}
@@ -228,120 +228,120 @@
 <body>
 <div class="bg" id="bg"></div>
 
-<!-- ===== 棣栧睆 ===== -->
+<!-- ===== 首屏 ===== -->
 <section class="screen active" id="s-home">
-  <h1>涓€鍗?span>路</span>缂?/h1>
-  <div class="sub">濂界殑鍏崇郴锛屽悇鎾戜竴鍗?/div>
-  <button class="btn-main" onclick="go('s-setup')">寮€濮?/button>
-  <div style="margin-top:24px"><button onclick="openDaily()" style="font-size:12px;opacity:.6;letter-spacing:.2em">浠婃棩涓€绛?/button></div>
+  <h1>一半<span>·</span>缘</h1>
+  <div class="sub">好的关系，各撑一半</div>
+  <button class="btn-main" onclick="go('s-setup')">开始</button>
+  <div style="margin-top:24px"><button onclick="openDaily()" style="font-size:12px;opacity:.6;letter-spacing:.2em">今日一签</button></div>
 </section>
 
-<!-- ===== 寤烘。 ===== -->
+<!-- ===== 建档 ===== -->
 <section class="screen" id="s-setup">
-  <div class="topbar"><div class="logo">涓€鍗?路 缂?/div><nav>
-    <button onclick="go('s-home')">杩斿洖</button></nav></div>
-  <h2>浣犳槸璋?/h2>
-  <div class="group-label">鎬у埆</div>
+  <div class="topbar"><div class="logo">一半 · 缘</div><nav>
+    <button onclick="go('s-home')">返回</button></nav></div>
+  <h2>你是谁</h2>
+  <div class="group-label">性别</div>
   <div class="chips" id="c-sex"></div>
-  <div class="group-label">骞撮緞娈?/div>
+  <div class="group-label">年龄段</div>
   <div class="chips" id="c-age"></div>
-  <div class="group-label">姘旇川鍋忓ソ</div>
+  <div class="group-label">气质偏好</div>
   <div class="chips" id="c-style"></div>
   <div style="margin-top:32px"></div>
-  <button class="btn-main" onclick="setup()">绛句笅鍚嶅瓧</button>
+  <button class="btn-main" onclick="setup()">签下名字</button>
 </section>
 
-<!-- ===== 鎶藉崱 ===== -->
+<!-- ===== 抽卡 ===== -->
 <section class="screen" id="s-draw">
-  <div class="topbar"><div class="logo">涓€鍗?路 缂?/div><nav>
-    <button onclick="go('s-album')">鍗″唽</button>
-    <button onclick="go('s-home2')">灏忓</button></nav></div>
+  <div class="topbar"><div class="logo">一半 · 缘</div><nav>
+    <button onclick="go('s-album')">卡册</button>
+    <button onclick="go('s-home2')">小家</button></nav></div>
   <div class="draw-stage">
-    <div class="stage-label" id="draw-counts">浠婃棩浣?3 绛?/div>
-    <div class="lottery" id="lottery" onclick="draw()">鎶戒竴鏀?/div>
-    <div style="font-size:12px;opacity:.5">鎶藉崱鍗崇粨缂橈紝姣忔棩鍏嶈垂 3 娆?/div>
+    <div class="stage-label" id="draw-counts">今日余 3 签</div>
+    <div class="lottery" id="lottery" onclick="draw()">抽一支</div>
+    <div style="font-size:12px;opacity:.5">抽卡即结缘，每日免费 3 次</div>
   </div>
 </section>
 
-<!-- ===== 缁撴灉 ===== -->
+<!-- ===== 结果 ===== -->
 <section class="screen" id="s-result">
   <div class="card-flip" id="result-flip">
     <div class="card-inner">
       <div class="card-front">
-        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--gold2);opacity:.3">缂?/div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--gold2);opacity:.3">缘</div>
       </div>
       <div class="card-back" id="result-card"></div>
     </div>
   </div>
   <div class="verse" id="result-verse"></div>
   <div class="actions">
-    <button onclick="draw()">鍐嶆娊涓€鏀?/button>
-    <button class="primary" onclick="bringHome()">甯?TA 鍥炲</button>
-    <button onclick="go('s-draw')">鍥炲埌绛剧瓛</button>
+    <button onclick="draw()">再抽一支</button>
+    <button class="primary" onclick="bringHome()">带 TA 回家</button>
+    <button onclick="go('s-draw')">回到签筒</button>
   </div>
 </section>
 
-<!-- ===== 鍗″唽 ===== -->
+<!-- ===== 卡册 ===== -->
 <section class="screen" id="s-album">
-  <div class="topbar"><div class="logo">鍗″唽</div><nav>
-    <button onclick="go('s-draw')">鎶界</button></nav></div>
-  <h2>缂樺垎鍐?/h2>
-  <div style="font-size:12px;opacity:.5;margin-bottom:16px;letter-spacing:.1em">宸叉敹钘?<span id="album-count">0</span> 寮?/div>
+  <div class="topbar"><div class="logo">卡册</div><nav>
+    <button onclick="go('s-draw')">抽签</button></nav></div>
+  <h2>缘分册</h2>
+  <div style="font-size:12px;opacity:.5;margin-bottom:16px;letter-spacing:.1em">已收藏 <span id="album-count">0</span> 张</div>
   <div class="album" id="album" style="overflow-y:auto;max-height:calc(100vh - 160px)"></div>
 </section>
 
-<!-- ===== 灏忓 ===== -->
+<!-- ===== 小家 ===== -->
 <section class="screen" id="s-home2">
-  <div class="topbar"><div class="logo">灏忓</div><nav>
-    <button onclick="go('s-draw')">鎶界</button></nav></div>
-  <h2>涓や汉鍗虫垚瀹?/h2>
+  <div class="topbar"><div class="logo">小家</div><nav>
+    <button onclick="go('s-draw')">抽签</button></nav></div>
+  <h2>两人即成家</h2>
   <div id="home-empty" style="text-align:center;opacity:.7;padding:40px 0;flex-direction:column;align-items:center;gap:16px">
-    <div style="font-size:15px;letter-spacing:.1em;line-height:2.2;font-family:serif">浣犺繕娌℃妸璋佸甫鍥炲<br><br>鎶戒竴鏀紭鍒嗙锛岄亣瑙?TA</div>
-    <button class="btn-main" onclick="go('s-draw')">鍘绘娊涓€鏀?/button>
+    <div style="font-size:15px;letter-spacing:.1em;line-height:2.2;font-family:serif">你还没把谁带回家<br><br>抽一支缘分签，遇见 TA</div>
+    <button class="btn-main" onclick="go('s-draw')">去抽一支</button>
   </div>
   <div id="home-full" style="display:none;flex-direction:column;align-items:center;gap:8px;width:100%">
     <div class="home-card"><img id="home-photo"><div class="nm" id="home-name"></div></div>
-    <div class="stage-label" id="home-stage">鍒濋亣</div>
+    <div class="stage-label" id="home-stage">初遇</div>
     <div class="bond">
       <div style="display:flex;justify-content:space-between;font-size:12px;opacity:.7">
-        <span>浜插瘑搴?/span><span id="bond-num">0</span></div>
+        <span>亲密度</span><span id="bond-num">0</span></div>
       <div class="bar"><i id="bond-fill" style="width:0%"></i></div>
     </div>
-    <div class="home-scene-label">灏忓涓€瑙?/div>
+    <div class="home-scene-label">小家一角</div>
     <div class="home-scene"><img id="home-scene-img" src="assets/home-living.png"></div>
     <div class="act-grid">
-      <button onclick="act('say')">濂藉ソ璇磋瘽</button>
-      <button onclick="act('live')">鎱㈡參杩囨棩瀛?/button>
-      <button onclick="act('half')">鍚勬拺涓€鍗?/button>
+      <button onclick="act('say')">好好说话</button>
+      <button onclick="act('live')">慢慢过日子</button>
+      <button onclick="act('half')">各撑一半</button>
     </div>
     <div class="acts-left" id="acts-left"></div>
     <div class="dialog" id="dialog"></div>
-    <button onclick="shareCard()" style="margin-top:12px;font-size:12px;opacity:.7;letter-spacing:.2em;padding:8px 24px;border:1px solid var(--line);border-radius:20px;transition:all .3s;background:rgba(255,255,255,.03);font-family:serif">鐢熸垚鍒嗕韩鍗?/button>
+    <button onclick="shareCard()" style="margin-top:12px;font-size:12px;opacity:.7;letter-spacing:.2em;padding:8px 24px;border:1px solid var(--line);border-radius:20px;transition:all .3s;background:rgba(255,255,255,.03);font-family:serif">生成分享卡</button>
   </div>
 </section>
 
-<!-- 姣忔棩绛炬诞灞?-->
+<!-- 每日签浮层 -->
 <section class="screen" id="s-daily">
-  <div class="topbar"><div class="logo">浠婃棩涓€绛?/div><nav>
-    <button onclick="go('s-home')">鍏抽棴</button></nav></div>
+  <div class="topbar"><div class="logo">今日一签</div><nav>
+    <button onclick="go('s-home')">关闭</button></nav></div>
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;width:100%">
-    <div style="font-size:12px;letter-spacing:.3em;opacity:.5">浠婃棩杩愬娍</div>
+    <div style="font-size:12px;letter-spacing:.3em;opacity:.5">今日运势</div>
     <div class="daily" id="daily-text"></div>
     <div class="lucky" id="daily-bonus"></div>
   </div>
 </section>
 
-<div class="footer">浜虹墿鍧囦负 AI 鐢熸垚 路 鍐呭浠呬緵濞变箰鍙傝€?/div>
+<div class="footer">人物均为 AI 生成 · 内容仅供娱乐参考</div>
 
 <script>
-/* ============ 鏁版嵁 ============ */
+/* ============ 数据 ============ */
 const BASE="https://raw.githubusercontent.com/mengxxx111/yiban-assets/main";
 const AGES=["20s","25s","30s","35s","40s"];
 const STYLES={
-  "鍏夌郴":{en:"sunny",desc:"鏄庝寒"},
-  "鏆栫郴":{en:"warm",desc:"娓╂煍"},
-  "婢堢郴":{en:"cool",desc:"娓呭喎"},
-  "瀹夌郴":{en:"distant",desc:"娌夌ǔ"}
+  "光系":{en:"sunny",desc:"明亮"},
+  "暖系":{en:"warm",desc:"温柔"},
+  "澈系":{en:"cool",desc:"清冷"},
+  "安系":{en:"distant",desc:"沉稳"}
 };
 const RARITY=[
   {k:"N",w:55,color:"var(--n)"},
@@ -349,32 +349,32 @@ const RARITY=[
   {k:"SR",w:12,color:"var(--sr)"},
   {k:"SSR",w:3,color:"var(--ssr)"}
 ];
-const NAMES=["鏄?,"鏄€","鏅?,"鏇?,"鏅?,"鏅?,"鏅?,"鏍?,"鎱?,"鎱?,"杈?,"蹇?,"瀹?,"瀵?,"閬?,"绗?,"鏅?,"鏄?,"娌?,"宸?];
+const NAMES=["昭","昀","晗","曦","晴","晏","晗","栩","慕","慕","辞","念","安","寻","遇","笙","晚","星","河","川"];
 const VERSES={
-  "鍏夌郴":["浣犳槸鐓т寒灞嬫獝鐨勯偅鏉熷厜","鏅村ぉ閲岀殑鍏夛紝钀藉湪浣犺偐涓?,"閬囪浣犵殑閭ｅぉ锛屼簯閮戒寒浜?,"浣犲儚娓呮櫒鐨勭涓€缂曢槼鍏夛紝娓╂煍鍗存湁鍔涢噺","鏈変綘鐨勫湴鏂癸紝灏辨槸鏅村ぉ","闃冲厜鍒氬ソ钀藉湪浣犲彂姊?],
-  "鏆栫郴":["浣犳槸鍐棩绐楀彴涓婄殑涓€鐩忕伅","娓╂煍鐨勪汉锛屾參鎱㈣蛋杩?,"鐑熺伀姘旈噷锛屾渶鏆栨槸浣?,"浣犵瑧璧锋潵鐨勬牱瀛愶紝鍍忓啲澶╅噷鐨勭儹鍙彲","鍜屼綘鍦ㄤ竴璧凤紝杩炵┖姘旈兘鏄殩鐨?,"浣犳槸鎴戠柌鎯敓娲婚噷鐨勬俯鏌旀ⅵ鎯?],
-  "婢堢郴":["浣犳槸闆悗鍒濇櫞鐨勯偅闈㈡箹","娓呭喎鐨勫琛紝钘忕潃娓╂煍","鍒濊鏃讹紝浣犲儚涓€鍦哄垵闆?,"浣犲儚绉嬪ぉ鐨勬箹姘达紝瀹夐潤鍙堟繁閭?,"浣犵殑鐪肩潧閲岋紝鏈夋槦鏄熶篃鏈夋箹姘?,"娓呭喎鐨勬皵璐紝娓╂煍鐨勫績"],
-  "瀹夌郴":["浣犳槸娣卞褰掑鏃剁暀鐨勯偅鐩忕伅","娌夌ǔ鐨勪汉锛屾渶蹇冨畨","宀佹湀婕暱锛屼綘鍦ㄥ氨濂?,"鍜屼綘鍦ㄤ竴璧凤紝鏃堕棿閮芥參浜?,"浣犳槸鎴戝畨绋冲瞾鏈堥噷鐨勫皬纭垢","鏈変綘鍦紝鍝噷閮芥槸瀹?]
+  "光系":["你是照亮屋檐的那束光","晴天里的光，落在你肩上","遇见你的那天，云都亮了","你像清晨的第一缕阳光，温柔却有力量","有你的地方，就是晴天","阳光刚好落在你发梢"],
+  "暖系":["你是冬日窗台上的一盏灯","温柔的人，慢慢走近","烟火气里，最暖是你","你笑起来的样子，像冬天里的热可可","和你在一起，连空气都是暖的","你是我疲惫生活里的温柔梦想"],
+  "澈系":["你是雪后初晴的那面湖","清冷的外表，藏着温柔","初见时，你像一场初雪","你像秋天的湖水，安静又深邃","你的眼睛里，有星星也有湖水","清冷的气质，温柔的心"],
+  "安系":["你是深夜归家时留的那盏灯","沉稳的人，最心安","岁月漫长，你在就好","和你在一起，时间都慢了","你是我安稳岁月里的小确幸","有你在，哪里都是家"]
 };
-const STAGES=[{n:"鍒濋亣",min:0},{n:"鐩哥啛",min:30},{n:"鐩哥煡",min:60},{n:"鐩稿畧",min:100}];
+const STAGES=[{n:"初遇",min:0},{n:"相熟",min:30},{n:"相知",min:60},{n:"相守",min:100}];
 const ACT_LINES={
-  say:["浣犺锛氫粖澶╂湁鐐圭疮銆傛垜璇达細閭ｆ垜鎶婇キ鍋氬ソ銆?,"浣犺锛氬垰鎵嶉偅鍙ヨ瘽閲嶄簡銆傛垜璇达細鎴戠煡閬撱€?,"浣犺锛氭兂浣犱簡銆傛垜璇达細鎴戜篃鎯充綘銆?,"浣犺锛氭垜鏄笉鏄緢楹荤儲锛熸垜璇达細浣犳槸鎴戠殑灏忛夯鐑︺€?,"浣犺锛氫粖澶╁ソ闅捐繃銆傛垜璇达細鎶辨姳锛屾垜鍦ㄣ€?,"浣犺锛氳阿璋綘銆傛垜璇达細璺熸垜杩樺姘斾粈涔堛€?],
-  live:["鎴戜滑涓€璧锋摝浜嗙獥鎴?,"鏅氶キ鏄綘鍋氱殑锛屾垜娲楃殑纰?,"楗悗鏁ｆ锛岃蛋浜嗗緢杩?,"鍛ㄦ湯涓€璧锋暣鐞嗕簡涔︽灦","浣犳祰鑺憋紝鎴戞嫋鍦?,"鎴戜滑涓€璧风湅浜嗕竴閮ㄨ€佺數褰?],
-  half:["浣犳拺鐫€浼烇紝鎴戞彁鐫€鑿?,"浣犺浣犲繖锛屾垜璇存垜鏉?,"鎴戜滑鍚勮涓€姝ワ紝鍒氬ソ","浣犲姞鐝紝鎴戠暀鐏?,"浣犳棭璧凤紝鎴戝仛鏃╅","浣犻毦鐨勬椂鍊欙紝鎴戦《涓婂幓"]
+  say:["你说：今天有点累。我说：那我把饭做好。","你说：刚才那句话重了。我说：我知道。","你说：想你了。我说：我也想你。","你说：我是不是很麻烦？我说：你是我的小麻烦。","你说：今天好难过。我说：抱抱，我在。","你说：谢谢你。我说：跟我还客气什么。"],
+  live:["我们一起擦了窗户","晚饭是你做的，我洗的碗","饭后散步，走了很远","周末一起整理了书架","你浇花，我拖地","我们一起看了一部老电影"],
+  half:["你撑着伞，我提着菜","你说你忙，我说我来","我们各让一步，刚好","你加班，我留灯","你早起，我做早餐","你难的时候，我顶上去"]
 };
 
-/* ============ 鐘舵€?============ */
+/* ============ 状态 ============ */
 let S=load();
 function load(){
   try{return JSON.parse(localStorage.getItem("yiban-game")||"{}")}catch(e){return{}}
 }
 function save(){localStorage.setItem("yiban-game",JSON.stringify(S))}
 
-/* ============ 宸ュ叿 ============ */
+/* ============ 工具 ============ */
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  // 涓嶅悓椤甸潰閰嶄笉鍚岃儗鏅?
+  // 不同页面配不同背景
   const bg=document.getElementById("bg");
   if(id==="s-home2"){
     bg.style.backgroundImage="url('assets/bg-dusk-new.png')";
@@ -389,7 +389,7 @@ function todayKey(){return new Date().toISOString().slice(0,10)}
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function pick(arr){return arr[rnd(0,arr.length-1)]}
 
-/* ============ 寤烘。 ============ */
+/* ============ 建档 ============ */
 function buildChips(){
   const mk=(id,opts,onPick)=>{
     const el=document.getElementById(id);
@@ -404,28 +404,28 @@ function buildChips(){
       el.appendChild(b);
     });
   };
-  mk("c-sex",["鐢?,"濂?]);
-  mk("c-age",AGES.map(a=>a.replace("s","浠?)));
+  mk("c-sex",["男","女"]);
+  mk("c-age",AGES.map(a=>a.replace("s","代")));
   mk("c-style",Object.keys(STYLES));
 }
 function setup(){
   if(!S.setup||!S.setup["c-sex"]||!S.setup["c-age"]||!S.setup["c-style"]){
-    alert("涓夐」閮介€変竴涓?);return
+    alert("三项都选一下");return
   }
   S.played=true;save();
   go("s-draw");
 }
 
-/* ============ 鎶藉崱 ============ */
+/* ============ 抽卡 ============ */
 function draw(){
   const tk=todayKey();
   S.days=S.days||{};
   const d=S.days[tk]||{draws:0,acts:3,signed:false};
-  if(d.draws>=3 && !d.bonus){alert("浠婃棩鍏嶈垂 3 鎶藉凡鐢ㄥ畬锛屾槑澶╁啀鏉?);return}
+  if(d.draws>=3 && !d.bonus){alert("今日免费 3 抽已用完，明天再来");return}
   if(d.bonus>0){d.bonus--}else{d.draws++}
   S.days[tk]=d;save();
 
-  // 绮掑瓙鐗规晥
+  // 粒子特效
   const lottery=document.getElementById("lottery");
   const colors=["#C9A227","#E8D5A3","#F2EADA","#D94040","#5B8DD9"];
   for(let i=0;i<20;i++){
@@ -442,7 +442,7 @@ function draw(){
     setTimeout(()=>p.remove(),1200);
   }
 
-  // 绋€鏈夊害
+  // 稀有度
   const pity=(S.pity||0)+1;
   let pool=RARITY.map(r=>({...r,n:r.w}));
   if(pity>=50) pool=RARITY.map(r=>({...r,n:r.k==="SSR"?100:0}));
@@ -452,28 +452,28 @@ function draw(){
   for(const p of pool){if(roll<p.n){rarity=p.k;break}roll-=p.n}
   if(rarity==="SR"||rarity==="SSR") S.pity=0; else S.pity=pity;
 
-  // 鍥?
-  const gender=S.setup["c-sex"]==="鐢??"female":"male";
+  // 图
+  const gender=S.setup["c-sex"]==="男"?"female":"male";
   const styleCN=S.setup["c-style"];
-  const age=AGES[AGES.indexOf(S.setup["c-age"].replace("浠?,"s"))];
+  const age=AGES[AGES.indexOf(S.setup["c-age"].replace("代","s"))];
   const style=STYLES[styleCN];
   const n=rnd(1,60);
   const url=`${BASE}/${gender}/${age}/${encodeURIComponent(styleCN)}/${gender}-${age}-${style.en}-${String(n).padStart(3,"0")}.webp`;
   const id=`${gender}-${age}-${style.en}-${n}`;
   const card={id,url,rarity,style:styleCN,age:age,gender};
 
-  // 鍗″唽
+  // 卡册
   S.album=S.album||{};
   if(!S.album[id]) S.album[id]=card;
 
-  // 缁撴灉
+  // 结果
   const flip=document.getElementById("result-flip");
   flip.classList.remove("flipped");
   document.getElementById("result-card").className="card-back frame-"+rarity;
   document.getElementById("result-card").innerHTML=`
     <img class="photo" src="${url}" onerror="this.style.display='none'" style="width:100%;height:75%;object-fit:cover">
     <div class="info" style="padding:10px 12px;background:var(--ink2)">
-      <div class="name">${pick(NAMES)} 路 ${styleCN}</div>
+      <div class="name">${pick(NAMES)} · ${styleCN}</div>
       <div class="rarity rarity-${rarity.toLowerCase()}">${rarity}</div>
     </div>`;
   document.getElementById("result-verse").textContent=pick(VERSES[styleCN]);
@@ -482,7 +482,7 @@ function draw(){
   setTimeout(()=>flip.classList.add("flipped"),300);
 }
 
-/* ============ 灏忓 ============ */
+/* ============ 小家 ============ */
 function bringHome(){
   if(!S.album) return;
   const last=Object.values(S.album).pop();
@@ -495,29 +495,29 @@ function renderHome(){
   if(!S.home){empty.style.display="block";full.style.display="none";return}
   empty.style.display="none";full.style.display="flex";
   document.getElementById("home-photo").src=S.home.url;
-  document.getElementById("home-name").textContent=S.home.style+" 路 "+S.home.rarity;
+  document.getElementById("home-name").textContent=S.home.style+" · "+S.home.rarity;
   const bond=S.bond||0;
   document.getElementById("bond-num").textContent=bond;
   document.getElementById("bond-fill").style.width=Math.min(100,bond)+"%";
   const st=STAGES.slice().reverse().find(s=>bond>=s.min);
-  document.getElementById("home-stage").textContent=st?st.n:"鍒濋亣";
-  // 鏍规嵁闃舵鍒囨崲鍦烘櫙鎻掔敾
+  document.getElementById("home-stage").textContent=st?st.n:"初遇";
+  // 根据阶段切换场景插画
   const sceneImg=document.getElementById("home-scene-img");
   if(st){
-    if(st.n==="鍒濋亣") sceneImg.src="assets/home-living.png";
-    else if(st.n==="鐩哥啛") sceneImg.src="assets/home-bedroom.png";
-    else if(st.n==="鐩哥煡") sceneImg.src="assets/home-balcony.png";
+    if(st.n==="初遇") sceneImg.src="assets/home-living.png";
+    else if(st.n==="相熟") sceneImg.src="assets/home-bedroom.png";
+    else if(st.n==="相知") sceneImg.src="assets/home-balcony.png";
     else sceneImg.src="assets/home-living.png";
   }
   const tk=todayKey();
   const left=(S.days||{})[tk]?.acts??3;
-  document.getElementById("acts-left").textContent="浠婃棩杩樺彲鐩稿 "+left+" 娆?;
+  document.getElementById("acts-left").textContent="今日还可相处 "+left+" 次";
 }
 function act(type){
   const tk=todayKey();
   S.days=S.days||{};
   const d=S.days[tk]||{acts:3};
-  if(d.acts<=0){alert("浠婃棩鐩稿娆℃暟鐢ㄥ畬浜嗭紝鏄庡ぉ鍐嶆潵");return}
+  if(d.acts<=0){alert("今日相处次数用完了，明天再来");return}
   d.acts--;
   S.days[tk]=d;
   S.bond=(S.bond||0)+rnd(8,12);
@@ -527,12 +527,12 @@ function act(type){
   renderHome();
 }
 
-/* ============ 姣忔棩绛?============ */
+/* ============ 每日签 ============ */
 const DAILY_SIGNS=[
-  "浠婂ぉ瀹滃媷鏁紝鎯宠鐨勮瘽鍒棌鐫€","浠婂ぉ瀹滄參涓€鐐癸紝鍒偓瀵规柟","浠婂ぉ瀹滀富鍔紝涓€鏉按涔熸槸鍏冲績","浠婂ぉ瀹滅嫭澶勶紝鐣欑偣绌洪棿缁欏郊姝?,
-  "浠婂ぉ瀹滆鐪熻瘽锛屽摢鎬曟湁鐐圭柤","浠婂ぉ瀹滅瑧涓€绗戯紝鏄ㄥぉ鐨勪簨灏辩炕绡?,"浠婂ぉ瀹滅壍鎵嬶紝璧拌矾鏃跺埆鐜╂墜鏈?,"浠婂ぉ瀹滃仛楗紝鐑熺伀姘旀渶鍏讳汉",
-  "浠婂ぉ瀹滄嫢鎶憋紝浠庤儗鍚庢姳涓€涓嬩篃濂?,"浠婂ぉ瀹滃啓淇★紝鍝€曞彧鏄竴鍙ヨ瘽","浠婂ぉ瀹滄暎姝ワ紝澶曢槼涓嬬殑璺緢闀?,"浠婂ぉ瀹滃仛楗紝涓や釜浜轰竴璧峰悆鎵嶉",
-  "浠婂ぉ瀹滈亾姝夛紝浣庝釜澶翠笉涓汉","浠婂ぉ瀹滃じ澶稿鏂癸紝浠婂ぉ杈涜嫤浣犱簡","浠婂ぉ瀹滃彂鍛嗭紝浠€涔堥兘涓嶅仛涔熷緢濂?,"浠婂ぉ瀹滃洖蹇嗭紝绗竴娆¤闈㈢殑鏍峰瓙杩樿寰楀悧"
+  "今天宜勇敢，想说的话别藏着","今天宜慢一点，别催对方","今天宜主动，一杯水也是关心","今天宜独处，留点空间给彼此",
+  "今天宜说真话，哪怕有点疼","今天宜笑一笑，昨天的事就翻篇","今天宜牵手，走路时别玩手机","今天宜做饭，烟火气最养人",
+  "今天宜拥抱，从背后抱一下也好","今天宜写信，哪怕只是一句话","今天宜散步，夕阳下的路很长","今天宜做饭，两个人一起吃才香",
+  "今天宜道歉，低个头不丢人","今天宜夸夸对方，今天辛苦你了","今天宜发呆，什么都不做也很好","今天宜回忆，第一次见面的样子还记得吗"
 ];
 function openDaily(){
   const tk=todayKey();
@@ -543,46 +543,46 @@ function openDaily(){
     S.days[tk]=d;save();
   }
   document.getElementById("daily-text").textContent=pick(DAILY_SIGNS);
-  document.getElementById("daily-bonus").textContent=d.signed?"浠婃棩宸茬 路 閫?1 娆″厤璐规娊":"浠婃棩宸茬";
+  document.getElementById("daily-bonus").textContent=d.signed?"今日已签 · 送 1 次免费抽":"今日已签";
   go("s-daily");
 }
 
-/* ============ 鍒嗕韩鍗?============ */
+/* ============ 分享卡 ============ */
 function shareCard(){
   if(!S.home) return;
   const c=document.createElement("canvas");
   c.width=600;c.height=900;
   const ctx=c.getContext("2d");
-  // 鑳屾櫙
+  // 背景
   const grad=ctx.createLinearGradient(0,0,0,900);
   grad.addColorStop(0,"#0B0E1A");
   grad.addColorStop(1,"#1a1f35");
   ctx.fillStyle=grad;ctx.fillRect(0,0,600,900);
-  // 杈规
+  // 边框
   ctx.strokeStyle="#C9A227";ctx.lineWidth=2;
   ctx.strokeRect(40,40,520,820);
-  // 鍐呰竟妗?
+  // 内边框
   ctx.strokeStyle="rgba(201,162,39,.3)";ctx.lineWidth=1;
   ctx.strokeRect(50,50,500,800);
-  // 鏍囬
+  // 标题
   ctx.fillStyle="#E8D5A3";ctx.font="28px serif";ctx.textAlign="center";
-  ctx.fillText("涓€鍗?路 缂?,300,100);
-  // 瑁呴グ绾?
+  ctx.fillText("一半 · 缘",300,100);
+  // 装饰线
   ctx.strokeStyle="rgba(201,162,39,.5)";ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(200,120);ctx.lineTo(400,120);ctx.stroke();
-  // 鍓爣棰?
+  // 副标题
   ctx.fillStyle="#F2EADA";ctx.font="20px serif";
-  ctx.fillText("鎴戞妸 TA 甯﹀洖浜嗗",300,160);
+  ctx.fillText("我把 TA 带回了家",300,160);
   ctx.font="16px serif";ctx.fillStyle="#999";
-  ctx.fillText(S.home.style+" 路 "+S.home.rarity,300,200);
-  // 闃舵鎻掔敾鍗犱綅
+  ctx.fillText(S.home.style+" · "+S.home.rarity,300,200);
+  // 阶段插画占位
   ctx.fillStyle="rgba(201,162,39,.1)";
   ctx.fillRect(150,240,300,200);
   ctx.strokeStyle="rgba(201,162,39,.3)";
   ctx.strokeRect(150,240,300,200);
   ctx.fillStyle="rgba(232,213,163,.5)";ctx.font="14px serif";
-  ctx.fillText("涓や汉鐨勫皬瀹?,300,350);
-  // 浜插瘑搴﹁繘搴︽潯
+  ctx.fillText("两人的小家",300,350);
+  // 亲密度进度条
   ctx.fillStyle="rgba(255,255,255,.1)";
   ctx.fillRect(150,500,300,6);
   const bond=S.bond||0;
@@ -591,26 +591,26 @@ function shareCard(){
   bondGrad.addColorStop(1,"#E8D5A3");
   ctx.fillStyle=bondGrad;
   ctx.fillRect(150,500,Math.min(300,bond*3),6);
-  // 浜插瘑搴︽枃瀛?
+  // 亲密度文字
   ctx.fillStyle="#C9A227";ctx.font="18px serif";
-  ctx.fillText("浜插瘑搴?"+bond,300,540);
-  // 闃舵
+  ctx.fillText("亲密度 "+bond,300,540);
+  // 阶段
   const st=STAGES.slice().reverse().find(s=>bond>=s.min);
   ctx.fillStyle="#999";ctx.font="14px serif";
-  ctx.fillText(st?st.n:"鍒濋亣",300,570);
-  // 搴曢儴
+  ctx.fillText(st?st.n:"初遇",300,570);
+  // 底部
   ctx.fillStyle="#666";ctx.font="14px serif";
-  ctx.fillText("鏉ヤ竴鍗娐风紭锛岄亣瑙佷綘鐨勫彟涓€鍗?,300,830);
-  // 涓嬭浇
+  ctx.fillText("来一半·缘，遇见你的另一半",300,830);
+  // 下载
   const a=document.createElement("a");
   a.download="yiban-share.png";a.href=c.toDataURL("image/png");
   a.click();
 }
 
-/* ============ 闃舵瑙ｉ攣寮圭獥 ============ */
+/* ============ 阶段解锁弹窗 ============ */
 function checkStage(){
   const bond=S.bond||0;
-  const prev=S.lastStage||"鍒濋亣";
+  const prev=S.lastStage||"初遇";
   const cur=STAGES.slice().reverse().find(s=>bond>=s.min);
   if(cur && cur.n!==prev){
     S.lastStage=cur.n;save();
@@ -618,37 +618,37 @@ function checkStage(){
   }
 }
 function showStageModal(prev,cur){
-  // 闃舵瀵瑰簲绾康鎻掔敾
+  // 阶段对应纪念插画
   const stageImgMap={
-    "鍒濋亣":"assets/stage-first-meet.png",
-    "鐩哥啛":"assets/stage-acquainted.png",
-    "鐩哥煡":"assets/stage-knowing.png",
-    "鐩稿畧":"assets/stage-together.png"
+    "初遇":"assets/stage-first-meet.png",
+    "相熟":"assets/stage-acquainted.png",
+    "相知":"assets/stage-knowing.png",
+    "相守":"assets/stage-together.png"
   };
   const scene=stageImgMap[cur]||"assets/stage-first-meet.png";
   const overlay=document.createElement("div");
   overlay.style.cssText="position:fixed;inset:0;z-index:100;background:rgba(11,14,26,.9);display:flex;align-items:center;justify-content:center;animation:fadeIn .5s ease";
   overlay.innerHTML=`
     <div style="text-align:center;max-width:320px;padding:40px 20px;animation:pop .6s cubic-bezier(.2,1.4,.4,1)">
-      <div style="font-size:12px;letter-spacing:.3em;color:var(--gold2);opacity:.7;margin-bottom:16px">鍏崇郴杩涢樁</div>
+      <div style="font-size:12px;letter-spacing:.3em;color:var(--gold2);opacity:.7;margin-bottom:16px">关系进阶</div>
       <div style="width:240px;height:140px;margin:0 auto 20px;border-radius:8px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 32px rgba(0,0,0,.3)">
         <img src="${scene}" style="width:100%;height:100%;object-fit:cover">
       </div>
-      <div style="font-size:24px;letter-spacing:.2em;margin-bottom:8px">${prev} 鈫?${cur}</div>
-      <div style="font-size:13px;opacity:.6;margin-bottom:24px;line-height:1.8">${cur==="鐩稿畧"?"浣犱滑宸茬粡璧拌繃浜嗗垵閬囥€佺浉鐔熴€佺浉鐭ャ€?:"缁х画鐩稿锛屼翰瀵嗗害浼氬啀娑ㄣ€?}</div>
-      <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 40px;border:1px solid var(--gold);color:var(--gold2);font-size:14px;letter-spacing:.2em;background:rgba(201,162,39,.1);border-radius:20px;transition:all .3s">缁х画</button>
+      <div style="font-size:24px;letter-spacing:.2em;margin-bottom:8px">${prev} → ${cur}</div>
+      <div style="font-size:13px;opacity:.6;margin-bottom:24px;line-height:1.8">${cur==="相守"?"你们已经走过了初遇、相熟、相知。":"继续相处，亲密度会再涨。"}</div>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="padding:10px 40px;border:1px solid var(--gold);color:var(--gold2);font-size:14px;letter-spacing:.2em;background:rgba(201,162,39,.1);border-radius:20px;transition:all .3s">继续</button>
     </div>`;
   overlay.onclick=()=>overlay.remove();
   document.body.appendChild(overlay);
 }
 
-/* ============ 娓叉煋 ============ */
+/* ============ 渲染 ============ */
 function render(){
   const tk=todayKey();
   const d=(S.days||{})[tk]||{draws:0};
   const left=Math.max(0,3-d.draws);
   const dc=document.getElementById("draw-counts");
-  if(dc) dc.textContent="浠婃棩浣?"+left+" 绛?;
+  if(dc) dc.textContent="今日余 "+left+" 签";
 
   const ab=document.getElementById("album");
   if(ab){
@@ -657,7 +657,7 @@ function render(){
     const countEl=document.getElementById("album-count");
     if(countEl) countEl.textContent=all.length;
     if(all.length===0){
-      ab.innerHTML='<div style="grid-column:1/-1;text-align:center;opacity:.5;padding:40px 0;font-size:13px;letter-spacing:.1em">杩樻病鏈夋敹钘?br><br>鍘绘娊涓€鏀惂</div>';
+      ab.innerHTML='<div style="grid-column:1/-1;text-align:center;opacity:.5;padding:40px 0;font-size:13px;letter-spacing:.1em">还没有收藏<br><br>去抽一支吧</div>';
     } else {
       all.forEach(c=>{
         const div=document.createElement("div");
@@ -670,7 +670,7 @@ function render(){
   renderHome();
 }
 
-/* 鍚姩 */
+/* 启动 */
 document.getElementById("bg").style.backgroundImage="url('assets/bg-night-new.png')";
 buildChips();
 render();
